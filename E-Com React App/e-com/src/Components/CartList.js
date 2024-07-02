@@ -15,14 +15,23 @@ const CartList = ({ cartItems, setCartItems }) => {
             })
 
             if (res.ok) {
-                const updatedItems = cartItems.items.filter(item => item.id !== id);
+                const { updatedItems, totalQuantity, totalPrice } = cartItems.items.reduce((acc, item) => {
+                    if (item.id !== id) {
+                        acc.updatedItems.push(item);
+                        acc.totalQuantity += item.quantity;
+                        acc.totalPrice += item.price * item.quantity;
+                    }
+                    return acc;
+                }, { updatedItems: [], totalQuantity: 0, totalPrice: 0 });
+
                 setCartItems({
                     ...cartItems,
                     items: updatedItems,
                     count: updatedItems.length,
-                    total: updatedItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
-                })
-                setCartCount(updatedItems.length);
+                    total: totalPrice,
+                    totalQuantity: totalQuantity
+                });
+                setCartCount(totalQuantity);
             }
 
         } catch (err) {console.log(err);}       
@@ -31,7 +40,7 @@ const CartList = ({ cartItems, setCartItems }) => {
     return ( 
         <div className="flex flex-row mt-8 ml-5">
             <div>
-                {cartItems.count && <p className="text-left text-[22px] mb-5"><b>Your cart: {cartItems.count}</b> items</p>}
+                {cartItems.count && <p className="text-left text-[22px] mb-5"><b>Your cart: {cartItems.totalQuantity}</b> items</p>}
                 {cartItems.items && cartItems.items.map(item => (
                     <div className="flex flex-row pt-5 pr-5 pb-9 h-72 border-solid border-l-0 border-[#D2CECE36]" key={item.id}>
                         <div className="mr-14 mb-32">

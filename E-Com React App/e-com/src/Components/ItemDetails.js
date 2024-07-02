@@ -39,7 +39,7 @@ const ItemDetails = () => {
                 body: JSON.stringify(item)
             })
             setIsPending(false);
-            setCartCount(cartCount + 1);
+            setCartCount(cartCount + quantity);
         } catch (err) {
             console.log(err);
             setIsPending(false);

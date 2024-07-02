@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
                 },
             });
             const data = await res.json();
-            setCartCount(data.count);
+            setCartCount(data.totalQuantity);
         } catch (error) {
             console.log(error)
         }
